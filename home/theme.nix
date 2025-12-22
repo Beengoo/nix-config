@@ -1,5 +1,5 @@
 # Theme for graphical apps
-{ lib, pkgs }:
+{ lib, pkgs, ... }:
 let gtk-theme = "catppuccin-mocha-blue-standard";
 in {
   home.packages = with pkgs; [

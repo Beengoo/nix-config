@@ -1,4 +1,4 @@
-{ pkgs, zen-browser, config }: {
+{ pkgs, zen-browser, config, ... }: {
   
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
