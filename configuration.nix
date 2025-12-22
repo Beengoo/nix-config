@@ -8,6 +8,12 @@
 		[
 		./hardware-configuration.nix
 		];
+
+	fonts = {
+		packages = with pkgs; [ material-icons ]++builtins.filter lib.attrsets.isDerivation(builtins.attrValues pkgs.nerd-fonts);
+		fontDir.enable = true;
+	};
+
 	boot = {
 		kernelPackages = pkgs.linuxPackages_latest;
 		tmp.cleanOnBoot = true;
@@ -22,7 +28,7 @@
 			};
 			timeout = 5;
 		};
-		plymouth = rec {
+		plymouth = {
 			enable = true;
 			themePackages = with pkgs; [(adi1090x-plymouth-themes.override {selected_themes = ["rings"];})];
 		};
@@ -40,10 +46,7 @@
 		];
 
 	};
-	fonts = {
-		packages = with pkgs; [ material-icons ]++builtins.filter lib.attrsets.isDerivation(builtins.attrValues pkgs.nerd-fonts);
-		fontDir.enable = true;
-	};
+	
 	services.gnome.gcr-ssh-agent.enable = false;
 	services.usbmuxd.enable = true;
 	services.zerotierone = {
@@ -51,6 +54,8 @@
 		joinNetworks = [];
 
 	};
+	services.logrotate.checkConfig = false;
+	systemd.services.logrotate-checkconf.enable = false;
 	networking.hostName = "nixos";
 	users.users.beengoo = {
 		initialPassword = "1234";
@@ -158,7 +163,8 @@
 		ssh.startAgent = true;
 	};
 	networking.networkmanager.enable = true;
-	system.stateVersion = "26.05"; # DO NOT TOUCH!!!!!!!!!!!!!!!!!!!!
 
+
+	system.stateVersion = "26.05";
 }
 
