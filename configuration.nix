@@ -7,6 +7,7 @@
 	imports =
 		[
 		./hardware-configuration.nix
+		./system/services.nix
 		];
 
 	fonts = {
@@ -47,15 +48,6 @@
 
 	};
 	
-	services.gnome.gcr-ssh-agent.enable = false;
-	services.usbmuxd.enable = true;
-	services.zerotierone = {
-		enable = false;
-		joinNetworks = [];
-
-	};
-	services.logrotate.checkConfig = false;
-	systemd.services.logrotate-checkconf.enable = false;
 	networking.hostName = "nixos";
 	users.users.beengoo = {
 		initialPassword = "1234";
@@ -81,13 +73,6 @@
 			home-manager
 			wezterm
 	];
-	services.pipewire = {
-		enable 		= true;
-		pulse.enable 	= true;
-		alsa.enable 	= true;
-		jack.enable 	= true;
-	};
-	security.rtkit.enable = true;
 	hardware = {
 		bluetooth.enable = true;
 		graphics = {
@@ -103,23 +88,9 @@
 			package				= config.boot.kernelPackages.nvidiaPackages.stable;
 		};
 	};
-	services.blueman.enable = true;
 	nix.extraOptions = ''
 		use-xdg-base-directories = true
 		'';
-	services.xserver.videoDrivers = ["nvidia"];
-	systemd.services.NetworkManager-wait-online.enable = false;
-	services.greetd = {
-		enable = true;
-		restart = true;
-		settings = {
-			default_session = {
-				user = "greeter";
-				command = "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks";
-			};
-		};
-	};
-	services.speechd.enable = false;
 	nixpkgs.config.allowUnfree = true;
 	nix.settings.experimental-features = "nix-command flakes";
 	nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
@@ -134,24 +105,6 @@
 			};
 		};
 	};
-	systemd = {
-
-		user.services.polkit-gnome-authentication-agent-1 = {
-			description = "polkit-gnome-authentication-agent-1";
-			wantedBy = [ "graphical-session.target" ];
-			wants = [ "graphical-session.target" ];
-			after = [ "graphical-session.target" ];
-			serviceConfig = {
-				Type = "simple";
-				ExecStart =
-					"${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-				Restart = "on-failure";
-				RestartSec = 1;
-				TimeoutStopSec = 10;
-			};
-		};
-	};
-	services.gnome.gnome-keyring.enable = true;
 	programs = {
 		hyprland = {
 			enable = true;
