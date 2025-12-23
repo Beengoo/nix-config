@@ -48,31 +48,44 @@
 
 	};
 	
+	services.zerotierone = {
+		enable = false;
+		joinNetworks = [];
+
+	};
 	networking.hostName = "nixos";
 	users.users.beengoo = {
 		initialPassword = "1234";
 		isNormalUser = true;
 		extraGroups = [
 			"dialout"
-				"plugdev"
-				"wheel"
-				"networkmanager"
-				"video"
-				"plugdev"
-				"render"
-				"lp"
-				"scanner"
+			"plugdev"
+			"wheel"
+			"networkmanager"
+			"video"
+			"plugdev"
+			"render"
+			"lp"
+			"scanner"
 		];
 		shell = pkgs.nushell;
 	};
 	environment.systemPackages = with pkgs; [
 		nh
-			git
-			neovim
-			tmux
-			home-manager
-			wezterm
+		git
+		neovim
+		tmux
+		home-manager
+		wezterm
 	];
+	services.pipewire = {
+		enable 		= true;
+		pulse.enable 	= true;
+		alsa.enable 	= true;
+		jack.enable 	= true;
+	};
+	security.rtkit.enable = true;
+
 	hardware = {
 		bluetooth.enable = true;
 		graphics = {
@@ -88,9 +101,21 @@
 			package				= config.boot.kernelPackages.nvidiaPackages.stable;
 		};
 	};
+	services.blueman.enable = true;
+
 	nix.extraOptions = ''
 		use-xdg-base-directories = true
 		'';
+	services.greetd = {
+		enable = true;
+		restart = true;
+		settings = {
+			default_session = {
+				user = "greeter";
+				command = "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks";
+			};
+		};
+	};
 	nixpkgs.config.allowUnfree = true;
 	nix.settings.experimental-features = "nix-command flakes";
 	nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
