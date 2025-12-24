@@ -10,6 +10,7 @@
 		./hardware-configuration.nix
 		./system/services.nix
 		./system/audio.nix
+		./system/hardware.nix
 		./system/fonts.nix
 		./system/zerotierone.nix
 		./system/boot.nix
