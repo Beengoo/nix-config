@@ -1,75 +1,20 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
 	imports =
 		[
+		./system/users.nix
 		./hardware-configuration.nix
 		./system/services.nix
+		./system/audio.nix
+		./system/fonts.nix
+		./system/zerotierone.nix
+		./system/boot.nix
+		./system/network.nix
 		];
-
-	fonts = {
-		packages = with pkgs; [ material-icons ]++builtins.filter lib.attrsets.isDerivation(builtins.attrValues pkgs.nerd-fonts);
-		fontDir.enable = true;
-	};
-
-	boot = {
-		kernelPackages = pkgs.linuxPackages_latest;
-		tmp.cleanOnBoot = true;
-		loader = {
-			efi.canTouchEfiVariables = true;
-			grub = {
-				enable = true;
-				device = "nodev";
-				efiSupport = true;
-				useOSProber = true;
-				gfxmodeEfi = "1920x1080";
-			};
-			timeout = 5;
-		};
-		plymouth = {
-			enable = true;
-			themePackages = with pkgs; [(adi1090x-plymouth-themes.override {selected_themes = ["rings"];})];
-		};
-
-		consoleLogLevel = 0;
-		initrd.verbose = false;
-		kernelParams = [
-			"quiet"
-			"splash"
-			"boot.shell_on_fail"
-			"loglevel=3"
-			"rd.systemd.show_status=false"
-			"rd.udev.log_level=3"
-			"udev.log_priority=3"
-		];
-
-	};
-	
-	services.zerotierone = {
-		enable = false;
-		joinNetworks = [];
-
-	};
-	networking.hostName = "nixos";
-	users.users.beengoo = {
-		initialPassword = "1234";
-		isNormalUser = true;
-		extraGroups = [
-			"dialout"
-			"plugdev"
-			"wheel"
-			"networkmanager"
-			"video"
-			"plugdev"
-			"render"
-			"lp"
-			"scanner"
-		];
-		shell = pkgs.nushell;
-	};
 	environment.systemPackages = with pkgs; [
 		nh
 		git
@@ -78,30 +23,18 @@
 		home-manager
 		wezterm
 	];
-	services.pipewire = {
-		enable 		= true;
-		pulse.enable 	= true;
-		alsa.enable 	= true;
-		jack.enable 	= true;
+	programs = {
+		hyprland = {
+			enable = true;
+			xwayland.enable = true;
+			withUWSM = true;
+		};
+		steam.enable = true;
+		nano.enable = false;
+		ssh.startAgent = true;
 	};
-	security.rtkit.enable = true;
 
-	hardware = {
-		bluetooth.enable = true;
-		graphics = {
-			enable 		= true;
-			enable32Bit 	= true;
-		};
-		nvidia = {
-			modesetting.enable 		= true;
-			powerManagement.enable 		= false;
-			powerManagement.finegrained 	= false;
-			open				= true;
-			nvidiaSettings			= true;
-			package				= config.boot.kernelPackages.nvidiaPackages.stable;
-		};
-	};
-	services.blueman.enable = true;
+	security.rtkit.enable = true;
 
 	nix.extraOptions = ''
 		use-xdg-base-directories = true
@@ -130,19 +63,6 @@
 			};
 		};
 	};
-	programs = {
-		hyprland = {
-			enable = true;
-			xwayland.enable = true;
-			withUWSM = true;
-		};
-		steam.enable = true;
-		nano.enable = false;
-		ssh.startAgent = true;
-	};
-	networking.networkmanager.enable = true;
-
-
 	system.stateVersion = "26.05";
 }
 

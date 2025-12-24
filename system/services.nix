@@ -1,4 +1,4 @@
-{pkgs, config, ...}: {
+{pkgs, ...}: {
 	services.gnome.gcr-ssh-agent.enable = false;
 	services.usbmuxd.enable = true;
 	services.logrotate.checkConfig = false;
