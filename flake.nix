@@ -18,13 +18,16 @@
   outputs = { nixpkgs, home-manager, noctalia, zen-browser, ... }@inputs:
     let
       system = "x86_64-linux";
-      overlay = final: prev: {
+      lazer-pkg = final: prev: {
         Lazer = final.callPackage ./home/localpkgs/Lazer {};
+      };
+      qt6ct-kde-pkg = final: prev: {
+        qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde {};
       };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ overlay ];
+        overlays = [ lazer-pkg qt6ct-kde-pkg ];
       };
     in {
       nixosConfigurations = {

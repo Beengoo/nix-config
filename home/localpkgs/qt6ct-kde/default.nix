@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
     url = "https://www.opencode.net/trialuser/qt6ct.git";
     # You may need to update this hash after first build attempt
     # Run: nix-prefetch-git https://www.opencode.net/trialuser/qt6ct.git
-    #hash = "sha256-x9jLoh3gAsJuSZXnIimUsxZaobiNYYB1UIAwy0HqDp4=";
+    hash = "sha256-x9jLoh3gAsJuSZXnIimUsxZaobiNYYB1UIAwy0HqDp4=";
   };
 
   patches = [

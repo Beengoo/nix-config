@@ -8,7 +8,7 @@ let
   kde-icons = "Breeze Dark";
   kde-font = ''"Fixel Text Medium,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
 in {
-  home.packages = with pkgs; [ kdePackages.breeze.qt5 kdePackages.breeze ];
+  home.packages = with pkgs; [ kdePackages.breeze.qt5 kdePackages.breeze qt6ct-kde];
 
   # Cursor setup
   home.pointerCursor = {
@@ -50,13 +50,12 @@ in {
   };
 
   xdg.configFile = {
-
-
     qt6full = {
       target = "qt6ct/qt6ct.conf";
       text = lib.generators.toINI { } {
 
         Appearance = {
+          color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
           custom_palette = "true";
           icon_theme = kde-icons;
           standard_dialogs = "default";
