@@ -12,8 +12,8 @@ in {
 
   # Cursor setup
   home.pointerCursor = {
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
+    package = pkgs.Lazer;
+    name = "Lazer";
     size = 24;
     gtk.enable = true;
     x11 = {

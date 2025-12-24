@@ -18,15 +18,19 @@
   outputs = { nixpkgs, home-manager, noctalia, zen-browser, ... }@inputs:
     let
       system = "x86_64-linux";
+      overlay = final: prev: {
+        Lazer = final.callPackage ./home/localpkgs/Lazer {};
+      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [ overlay ];
       };
     in {
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
           modules = [ ./configuration.nix ];
-          specialArgs = { inherit system inputs; };
+          specialArgs = { inherit system inputs pkgs; };
         };
       };
       homeConfigurations = {
