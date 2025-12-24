@@ -1,14 +1,14 @@
 # Theme for graphical apps
 { lib, pkgs, ... }:
-let gtk-theme = "catppuccin-mocha-blue-standard";
+let
+  gtk-theme = "Breeze-Dark";
+  gtk-icons = "Breeze Dark";
+
+  kde-theme = "Breeze";
+  kde-icons = "Breeze Dark";
+  kde-font = ''"Fixel Text Medium,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
 in {
-  home.packages = with pkgs; [
-    (catppuccin-kvantum.override {
-      accent = "blue";
-      variant = "mocha";
-    })
-    papirus-folders
-  ];
+  home.packages = with pkgs; [ kdePackages.breeze.qt5 kdePackages.breeze ];
 
   # Cursor setup
   home.pointerCursor = {
@@ -27,24 +27,15 @@ in {
     enable = true;
     theme = {
       name = gtk-theme;
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
-        size = "standard";
-        variant = "mocha";
-      };
+      package = pkgs.kdePackages.breeze-gtk;
     };
     iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.catppuccin-papirus-folders.override {
-        flavor = "mocha";
-        accent = "blue";
-      };
+      name = gtk-icons;
+      package = pkgs.kdePackages.breeze-icons;
     };
 
     gtk3 = {
-      bookmarks = [
-
-      ];
+      bookmarks = [ ];
       extraConfig.gtk-application-prefer-dark-theme = true;
     };
   };
@@ -59,23 +50,46 @@ in {
   };
 
   xdg.configFile = {
-    kvantum = {
-      target = "Kvantum/kvantum.kvconfig";
-      text =
-        lib.generators.toINI { } { General.theme = "catppuccin-mocha-blue"; };
-    };
 
-    qt5ct = {
-      target = "qt5ct/qt5ct.conf";
-      text = lib.generators.toINI { } {
-        Appearance = { icon_theme = "Papirus-Dark"; };
-      };
-    };
 
-    qt6ct = {
+    qt6full = {
       target = "qt6ct/qt6ct.conf";
       text = lib.generators.toINI { } {
-        Appearance = { icon_theme = "Papirus-Dark"; };
+
+        Appearance = {
+          custom_palette = "true";
+          icon_theme = kde-icons;
+          standard_dialogs = "default";
+          style = kde-theme;
+        };
+        Fonts = {
+          fixed = kde-font;
+          general = kde-font;
+        };
+        Interface = {
+          activate_item_on_single_click = "1";
+          buttonbox_layout = "3";
+          cursor_flash_time = "1000";
+          dialog_buttons_have_icons = "1";
+          double_click_interval = "400";
+          gui_effects =
+            "General, AnimateMenu, AnimateCombo, AnimateTooltip, AnimateToolBox";
+          keyboard_scheme = "3";
+          menus_have_icons = "true";
+          show_shortcuts_in_context_menus = "true";
+          stylesheets = "@Invalid()";
+          toolbutton_style = "4";
+          underline_shortcut = "1";
+          wheel_scroll_lines = "3";
+        };
+        SettingWindow = {
+          geometry =
+            "@ByteArray(x1xd9xd0xcb0x3000000000000x4+00x2xcd0000000000x5-00x4x1d0000x2000ax800000000000x4+00x2xcd)";
+        };
+        Troubleshooting = {
+          force_raster_widgets = "1";
+          ignored_applications = "@Invalid()";
+        };
       };
     };
   };
@@ -83,8 +97,6 @@ in {
   qt = {
     enable = true;
     platformTheme.name = "qt6ct";
-    style = { name = "kvantum"; };
+    style = { name = "qt6ct"; };
   };
-
-  systemd.user.sessionVariables = { QT_STYLE_OVERRIDE = "kvantum"; };
 }

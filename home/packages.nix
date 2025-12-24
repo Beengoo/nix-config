@@ -5,6 +5,7 @@
     discord-canary
     btop
     kdePackages.dolphin
+    kdePackages.qt6ct
     gpu-screen-recorder
     cliphist
     wl-clipboard
