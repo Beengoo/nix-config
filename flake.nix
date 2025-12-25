@@ -5,17 +5,25 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    youtube-music = {
+      url = "github:h-banii/youtube-music-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { nixpkgs, home-manager, noctalia, zen-browser, ... }@inputs:
+  outputs = { nixpkgs, home-manager, noctalia, zen-browser, youtube-music, ... }@inputs:
     let
       system = "x86_64-linux";
       lazer-pkg = final: prev: {
@@ -27,13 +35,16 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ lazer-pkg qt6ct-kde-pkg ];
+        overlays = [ 
+          lazer-pkg 
+          qt6ct-kde-pkg
+        ];
       };
     in {
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
-          modules = [ ./configuration.nix ];
-          specialArgs = { inherit system inputs pkgs; };
+          modules = [ ./configuration.nix ];  # Remove dolphin-overlay from here
+          specialArgs = { inherit system inputs; };
         };
       };
       homeConfigurations = {
@@ -42,6 +53,7 @@
           extraSpecialArgs = {
             inherit noctalia;
             inherit zen-browser;
+            inherit youtube-music;
           };
           modules = [ ./home.nix ];
         };

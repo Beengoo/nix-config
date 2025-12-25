@@ -61,7 +61,28 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia",
+        "youtube-music": "youtube-music",
         "zen-browser": "zen-browser"
+      }
+    },
+    "youtube-music": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1758080313,
+        "narHash": "sha256-DEPqruUVIixrW2C7ZjVI/J8Suff/HfDKkJsVnDzDIKY=",
+        "owner": "h-banii",
+        "repo": "youtube-music-nix",
+        "rev": "b1f4c39bc34698b84d1fe6d62730e7b76baa59c5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "h-banii",
+        "repo": "youtube-music-nix",
+        "type": "github"
       }
     },
     "zen-browser": {

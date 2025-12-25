@@ -4,66 +4,81 @@
 { config, pkgs, inputs, ... }:
 
 {
-	imports =
-		[
-		./system/users.nix
-		./hardware-configuration.nix
-		./system/services.nix
-		./system/audio.nix
-		./system/hardware.nix
-		./system/fonts.nix
-		./system/zerotierone.nix
-		./system/boot.nix
-		./system/network.nix
-		];
-	environment.systemPackages = with pkgs; [
-		nh
-		git
-		neovim
-		tmux
-		home-manager
-		wezterm
-	];
-	programs = {
-		hyprland = {
-			enable = true;
-			xwayland.enable = true;
-			withUWSM = true;
-		};
-		steam.enable = true;
-		nano.enable = false;
-		ssh.startAgent = true;
-	};
+  imports = [
+    ./system/users.nix
+    ./hardware-configuration.nix
+    ./system/services.nix
+    ./system/audio.nix
+    ./system/hardware.nix
+    ./system/fonts.nix
+    ./system/zerotierone.nix
+    ./system/boot.nix
+    ./system/network.nix
+  ];
+  environment.systemPackages = with pkgs; [
+    nh
+    git
+    neovim
+    neovide
+    tmux
+    home-manager
+    kdePackages.konsole
+];
+  environment.etc."xdg/menus/applications.menu".text = ''
+  <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+   "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+  <Menu>
+    <Name>Applications</Name>
+    <Directory>kde-main.directory</Directory>
+    <DefaultAppDirs/>
+    <DefaultDirectoryDirs/>
+    <DefaultMergeDirs/>
+    <Include>
+      <All/>
+    </Include>
+  </Menu>
+'';
+  programs = {
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+      withUWSM = true;
+    };
+    steam.enable = true;
+    nano.enable = false;
+    ssh.startAgent = true;
+  };
 
-	security.rtkit.enable = true;
+  security.rtkit.enable = true;
 
-	nix.extraOptions = ''
-		use-xdg-base-directories = true
-		'';
-	services.greetd = {
-		enable = true;
-		restart = true;
-		settings = {
-			default_session = {
-				user = "greeter";
-				command = "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks";
-			};
-		};
-	};
-	nixpkgs.config.allowUnfree = true;
-	nix.settings.experimental-features = "nix-command flakes";
-	nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
-	time.timeZone = "Europe/Kyiv";
-	i18n.defaultLocale = "en_US.UTF-8";
-	security = {
-		polkit.enable = true;
-		pam = {
-			services = {
-				ags = { };
-				sddm.enableGnomeKeyring = true;
-			};
-		};
-	};
-	system.stateVersion = "26.05";
+  nix.extraOptions = ''
+    use-xdg-base-directories = true
+  '';
+  services.greetd = {
+    enable = true;
+    restart = true;
+    settings = {
+      default_session = {
+        user = "greeter";
+        command =
+          "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks";
+      };
+    };
+  };
+  nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = "nix-command flakes";
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  time.timeZone = "Europe/Kyiv";
+  i18n.defaultLocale = "en_US.UTF-8";
+  security = {
+    polkit.enable = true;
+    pam = {
+      services = {
+        ags = { };
+        sddm.enableGnomeKeyring = true;
+      };
+    };
+  };
+  system.stateVersion = "26.05";
 }
 

@@ -27,4 +27,8 @@
 	
 	services.xserver.videoDrivers = ["nvidia"];
 	systemd.services.NetworkManager-wait-online.enable = false;
+	services.udisks2 = {
+		enable = true;
+		mountOnMedia = true;
+	};
 }

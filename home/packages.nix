@@ -1,5 +1,5 @@
 { pkgs, zen-browser, config, ... }: {
-  
+
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord-canary
@@ -23,8 +23,36 @@
     hyprlock
     hypridle
   ];
-  
+
   programs = {
+    youtube-music = {
+      enable = true;
+      options = {
+        tray = true;
+        language = "uk";
+        likeButtons = "force";
+      };
+      plugins = {
+        discord = {
+          enable = true;
+          autoReconnect = true;
+          activityTimeoutEnabled = true;
+          activityTimeoutTime = 600000;
+          playOnYouTubeMusic = true;
+          hideGitHubButton = true;
+          hideDurationLeft = false;
+        };
+        album-color-theme = {
+          enable = true;
+          ratio = 0.2;
+        };
+        ambient-mode = {
+          enable = true;
+          blur = 25;
+          opacity = 0.3;
+        };
+      };
+    };
     noctalia-shell = {
       enable = true;
       systemd.enable = true;
