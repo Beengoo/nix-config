@@ -31,12 +31,16 @@
       qt6ct-kde-pkg = final: prev: {
         qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde {};
       };
+      osu-lazer-pkg = final: prev: {
+        osu-lazer = final.callPackage ./home/localpkgs/osu-lazer {};
+      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [ 
           lazer-pkg 
           qt6ct-kde-pkg
+          osu-lazer-pkg
         ];
       };
     in {

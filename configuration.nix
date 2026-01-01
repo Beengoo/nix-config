@@ -3,6 +3,14 @@
 
 { config, pkgs, inputs, ... }:
 
+let
+  prime-run = pkgs.writeShellScriptBin "prime-run" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec "$@"
+  '';
+in
 {
   imports = [
     ./system/users.nix
@@ -17,6 +25,7 @@
   ];
   environment.systemPackages = with pkgs; [
     nh
+    prime-run
     git
     neovim
     neovide

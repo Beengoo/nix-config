@@ -4,6 +4,9 @@
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord-canary
     btop
+    osu-lazer
+    kdePackages.gwenview
+    vlc
     kdePackages.dolphin
     kdePackages.ark
     gpu-screen-recorder
