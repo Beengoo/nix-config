@@ -1,13 +1,12 @@
 {
   description = "My nix config";
   inputs = {
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -23,7 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { nixpkgs, home-manager, noctalia, zen-browser, youtube-music, ... }@inputs:
+  outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, ... }@inputs:
     let
       system = "x86_64-linux";
       lazer-pkg = final: prev: {

@@ -5,12 +5,14 @@
     discord-canary
     btop
     kdePackages.dolphin
+    kdePackages.ark
     gpu-screen-recorder
     cliphist
     wl-clipboard
     zip
     unzip
     brightnessctl
+    youtube-music
     ddcutil
     matugen
     cava
@@ -24,40 +26,12 @@
     hypridle
   ];
 
+
   programs = {
-    youtube-music = {
-      enable = true;
-      options = {
-        tray = true;
-        language = "uk";
-        likeButtons = "force";
-      };
-      plugins = {
-        discord = {
-          enable = true;
-          autoReconnect = true;
-          activityTimeoutEnabled = true;
-          activityTimeoutTime = 600000;
-          playOnYouTubeMusic = true;
-          hideGitHubButton = true;
-          hideDurationLeft = false;
-        };
-        album-color-theme = {
-          enable = true;
-          ratio = 0.2;
-        };
-        ambient-mode = {
-          enable = true;
-          blur = 25;
-          opacity = 0.3;
-        };
-      };
-    };
     noctalia-shell = {
       enable = true;
       systemd.enable = true;
     };
-    librewolf.enable = true;
     starship = { enable = true; };
     obs-studio = {
       enable = true;

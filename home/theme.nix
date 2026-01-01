@@ -8,6 +8,7 @@ let
   kde-icons = "Breeze Dark";
   kde-font = ''"Fixel Text Medium,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
 in {
+
   home.packages = with pkgs; [ kdePackages.breeze.qt5 kdePackages.breeze qt6ct-kde];
 
   # Cursor setup
@@ -30,8 +31,8 @@ in {
       package = pkgs.kdePackages.breeze-gtk;
     };
     iconTheme = {
-      name = gtk-icons;
-      package = pkgs.kdePackages.breeze-icons;
+      name = lib.mkForce gtk-icons;
+      package = lib.mkForce pkgs.kdePackages.breeze-icons;
     };
 
     gtk3 = {
@@ -95,7 +96,7 @@ in {
 
   qt = {
     enable = true;
-    platformTheme.name = "qt6ct";
+    platformTheme.name = lib.mkForce "qt6ct";
     style = { name = "qt6ct"; };
   };
 }

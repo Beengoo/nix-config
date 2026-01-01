@@ -1,4 +1,4 @@
-{ noctalia,youtube-music, ... }: {
+{ youtube-music, noctalia, ... }: {
   imports = [
     ./home/theme.nix
     ./home/packages.nix
