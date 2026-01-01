@@ -3,18 +3,22 @@
   appimageTools,
   fetchurl,
   makeWrapper,
+  # Set this to pin a specific version, or leave null for latest
+  # Example: "2026.102.0-lazer"
+  pinnedVersion ? null,
 }:
 
 let
-  pname = "osu-lazer-bin";
+  pname = "osu-lazer";
+  
+  # If pinnedVersion is set, use it; otherwise you need to update manually
+  # To find latest: curl -sI https://github.com/ppy/osu/releases/latest | grep location
   version = "2026.102.0";
+  tag = "${version}-lazer";
 
   src = fetchurl {
-    url = "https://github.com/ppy/osu/releases/download/${version}-lazer/osu.AppImage";
-    # First build will fail - copy the correct hash from the error message
-    # Or run: nix-prefetch-url https://github.com/ppy/osu/releases/download/2026.102.0-lazer/osu.AppImage
-    # Then: nix hash to-sri --type sha256 <resulting-hash>
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    url = "https://github.com/ppy/osu/releases/download/${tag}/osu.AppImage";
+    hash = "sha256-4n5IyVS01pwv9q9wpmbtRpwUdrIBg+ziml944AydYEI=";
   };
 
   # Extract the AppImage to get assets (icons, desktop file)
@@ -47,7 +51,7 @@ appimageTools.wrapType2 {
     
     # For hardware acceleration
     libva
-    vaapiVdpau
+    libva-vdpau-driver
     libvdpau-va-gl
   ];
 
@@ -55,19 +59,23 @@ appimageTools.wrapType2 {
   extraInstallCommands = ''
     source "${makeWrapper}/nix-support/setup-hook"
     
-    # Rename binary to friendlier name
-    mv $out/bin/${pname}-${version} $out/bin/osu-lazer
+    # Wrap with NVIDIA offload environment variables
+    wrapProgram $out/bin/${pname} \
+      --set __NV_PRIME_RENDER_OFFLOAD 1 \
+      --set __NV_PRIME_RENDER_OFFLOAD_PROVIDER "NVIDIA-G0" \
+      --set __GLX_VENDOR_LIBRARY_NAME "nvidia" \
+      --set __VK_LAYER_NV_optimus "NVIDIA_only"
     
-    # Create additional symlink as "osu!"
-    ln -s $out/bin/osu-lazer "$out/bin/osu!"
+    # Create symlink as "osu!"
+    ln -s $out/bin/${pname} "$out/bin/osu!"
     
     # Install desktop file
     install -Dm644 ${appimageContents}/osu!.desktop $out/share/applications/osu-lazer.desktop
     
-    # Fix the desktop file
+    # Fix the desktop file - use replace-warn since patterns might differ
     substituteInPlace $out/share/applications/osu-lazer.desktop \
-      --replace-fail 'Exec=osu!' 'Exec=osu-lazer' \
-      --replace-fail 'Icon=osu!' 'Icon=osu-lazer'
+      --replace-warn 'Exec=osu!' 'Exec=osu-lazer' \
+      --replace-warn 'Exec=AppRun' 'Exec=osu-lazer'
     
     # Install icons
     for size in 16 32 48 64 128 256 512 1024; do
