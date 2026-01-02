@@ -4,6 +4,8 @@
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord-canary
     btop
+    prismlauncher
+    carla
     osu-lazer
     kdePackages.gwenview
     vlc

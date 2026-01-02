@@ -97,6 +97,5 @@ in {
   qt = {
     enable = true;
     platformTheme.name = lib.mkForce "qt6ct";
-    style = { name = "qt6ct"; };
   };
 }

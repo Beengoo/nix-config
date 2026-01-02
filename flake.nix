@@ -9,14 +9,11 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     youtube-music = {
       url = "github:h-banii/youtube-music-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +22,9 @@
   outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, ... }@inputs:
     let
       system = "x86_64-linux";
+      carla-pkg = final: prev: {
+        carla = final.callPackage ./home/localpkgs/carla {};
+      };
       lazer-pkg = final: prev: {
         Lazer = final.callPackage ./home/localpkgs/Lazer {};
       };
@@ -38,7 +38,8 @@
         inherit system;
         config.allowUnfree = true;
         overlays = [ 
-          lazer-pkg 
+          lazer-pkg
+          carla-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
         ];
