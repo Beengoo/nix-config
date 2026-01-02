@@ -27,7 +27,9 @@ in
     nh
     prime-run
     git
+    pipewire.jack
     neovim
+    lsp-plugins
     neovide
     tmux
     home-manager
