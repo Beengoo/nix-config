@@ -10,8 +10,7 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec "$@"
   '';
-in
-{
+in {
   imports = [
     ./system/users.nix
     ./hardware-configuration.nix
@@ -29,27 +28,27 @@ in
     git
     pipewire.jack
     neovim
-    lsp-plugins
     neovide
     tmux
     home-manager
     kdePackages.konsole
-];
+  ];
   environment.etc."xdg/menus/applications.menu".text = ''
-  <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
-   "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
-  <Menu>
-    <Name>Applications</Name>
-    <Directory>kde-main.directory</Directory>
-    <DefaultAppDirs/>
-    <DefaultDirectoryDirs/>
-    <DefaultMergeDirs/>
-    <Include>
-      <All/>
-    </Include>
-  </Menu>
-'';
+    <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+     "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+    <Menu>
+      <Name>Applications</Name>
+      <Directory>kde-main.directory</Directory>
+      <DefaultAppDirs/>
+      <DefaultDirectoryDirs/>
+      <DefaultMergeDirs/>
+      <Include>
+        <All/>
+      </Include>
+    </Menu>
+  '';
   programs = {
+    zsh.enable = true;
     hyprland = {
       enable = true;
       xwayland.enable = true;

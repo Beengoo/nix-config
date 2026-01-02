@@ -13,6 +13,6 @@
 			"lp"
 			"scanner"
 		];
-		shell = pkgs.nushell;
+		shell = pkgs.zsh;
 	};
 }

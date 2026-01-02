@@ -1,9 +1,10 @@
-{ pkgs, zen-browser, config, ... }: {
+{ pkgs, zen-browser, ... }: {
 
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord-canary
     btop
+    lsp-plugins
     prismlauncher
     carla
     osu-lazer
@@ -31,8 +32,11 @@
     hypridle
   ];
 
-
   programs = {
+   zsh = {
+      enable = true;
+    };
+
     noctalia-shell = {
       enable = true;
       systemd.enable = true;
@@ -53,27 +57,12 @@
       withNodeJs = true;
       plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
     };
-    nushell = {
-      enable = true;
-      settings = {
-        show_banner = false;
-        completions.external.enable = true;
-      };
-      shellAliases = config.home.shellAliases;
-      environmentVariables = config.home.sessionVariables // {
-        CARAPACE_BRIDGES = "zsh";
-      };
-    };
     home-manager.enable = true;
     fzf = { enable = true; };
     carapace = {
       enable = true;
       enableNushellIntegration = true;
       enableZshIntegration = true;
-    };
-    zsh = {
-      enable = true;
-      enableCompletion = true;
     };
   };
 }

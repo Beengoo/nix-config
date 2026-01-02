@@ -63,6 +63,10 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-21QaFCIjGjRTcJtf2nwC5RcVJF8JgcFPIbS8apvf9tw=";
   };
 
+  patches = [
+    ./patches/tray-icon.patch
+  ];
+
   nativeBuildInputs = [
     python3Packages.wrapPython
     pkg-config
