@@ -26,6 +26,7 @@ in {
     nh
     prime-run
     git
+    openvpn
     pipewire.jack
     neovim
     neovide

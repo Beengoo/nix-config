@@ -5,7 +5,7 @@ let
   gtk-icons = "Breeze Dark";
 
   kde-theme = "Breeze";
-  kde-icons = "Breeze Dark";
+  kde-icons = "breeze-dark";
   kde-font = ''"Fixel Text Medium,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
 in {
 

@@ -6,6 +6,8 @@
     btop
     lsp-plugins
     prismlauncher
+    qpwgraph
+    networkmanagerapplet
     carla
     osu-lazer
     kdePackages.gwenview
