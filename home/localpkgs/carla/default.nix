@@ -1,88 +1,54 @@
-{
-  lib,
-  stdenv,
-  fetchFromGitHub,
-  # Build tools
-  pkg-config,
-  which,
-  python3Packages,
-  python3,
-  makeWrapper,
-  # Feature flags
-  withFrontend ? true,
-  withQt ? true,
-  withGtk2 ? true,
-  withGtk3 ? true,
-  withX11 ? true,
-  withFFmpeg ? true,
-  withFluidSynth ? true,
-  withProjectM ? false,
-  withSDL2 ? true,
-  withOSC ? true,
-  # Core dependencies
-  file,
-  liblo,
-  alsa-lib,
-  fluidsynth,
-  libpulseaudio,
-  libsndfile,
-  # Qt5
-  qt5,
-  # Gtk dependencies
-  gtk2,
-  gtk3,
-  # X11 dependencies
-  xorg,
-  # FFmpeg
-  ffmpeg,
-  # SDL2
-  SDL2,
-  # ProjectM (optional)
-  libprojectM ? null,
-  # Additional deps
-  fftw,
-  fftwFloat,
-  zlib,
-  libGLU,
-  libGL,
-  # JACK - use PipeWire's JACK by default
-  pipewire,
-  # Keep jack2 for building only (headers)
-  jack2,
-  libjack2,
-}:
+{ lib, stdenv, fetchFromGitHub,
+# Build tools
+pkg-config, which, python3Packages, python3, makeWrapper,
+# Feature flags
+withFrontend ? true, withQt ? true, withGtk2 ? true, withGtk3 ? true
+, withX11 ? true, withFFmpeg ? true, withFluidSynth ? true, withProjectM ? false
+, withSDL2 ? true, withOSC ? true,
+# Core dependencies
+file, liblo, alsa-lib, fluidsynth, libpulseaudio, libsndfile,
+# Qt5
+qt5,
+# Gtk dependencies
+gtk2, gtk3,
+# X11 dependencies
+xorg,
+# FFmpeg
+ffmpeg,
+# SDL2
+SDL2,
+# ProjectM (optional)
+libprojectM ? null,
+# Additional deps
+fftw, fftwFloat, zlib, libGLU, libGL,
+# JACK - use PipeWire's JACK by default
+pipewire,
+# Keep jack2 for building only (headers)
+jack2, libjack2, }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "carla";
-  version = "2.5.10";
-
+  version = "a406f00";
   src = fetchFromGitHub {
     owner = "falkTX";
     repo = "carla";
-    rev = "v${finalAttrs.version}";
-    hash = "sha256-21QaFCIjGjRTcJtf2nwC5RcVJF8JgcFPIbS8apvf9tw=";
+    rev = "${finalAttrs.version}";
+    hash = "sha256-IUEArFS2NPJtErLs4FF4TV+EGZkxZBdQj2umbWGoNyc=";
   };
 
-  patches = [
-    ./patches/tray-icon.patch
-  ];
+  patches = [ ./patches/tray-icon.patch ];
 
-  nativeBuildInputs = [
-    python3Packages.wrapPython
-    pkg-config
-    which
-    makeWrapper
-  ] ++ lib.optional withQt qt5.wrapQtAppsHook;
+  nativeBuildInputs =
+    [ python3Packages.wrapPython pkg-config which makeWrapper ]
+    ++ lib.optional withQt qt5.wrapQtAppsHook;
 
-  pythonPath = with python3Packages; [
-    rdflib
-    pyliblo3
-  ] ++ lib.optionals withFrontend [ pyqt5 pyqt5-sip ];
+  pythonPath = with python3Packages;
+    [ rdflib pyliblo3 ] ++ lib.optionals withFrontend [ pyqt5 pyqt5-sip ];
 
   buildInputs = [
     file
     alsa-lib
-    jack2      # Still needed for headers during build
+    jack2 # Still needed for headers during build
     libjack2
     libpulseaudio
     libsndfile
@@ -91,31 +57,24 @@ stdenv.mkDerivation (finalAttrs: {
     fftwFloat
     libGL
     libGLU
-  ]
-  ++ lib.optional withOSC liblo
-  ++ lib.optionals withQt [ qt5.qtbase qt5.qtsvg ]
-  ++ lib.optional withGtk2 gtk2
-  ++ lib.optional withGtk3 gtk3
-  ++ lib.optionals withX11 [
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXext
-    xorg.libXrandr
-    xorg.libXinerama
-  ]
-  ++ lib.optional withFluidSynth fluidsynth
-  ++ lib.optional withFFmpeg ffmpeg
-  ++ lib.optional withSDL2 SDL2
-  ++ lib.optional (withProjectM && libprojectM != null) libprojectM;
+  ] ++ lib.optional withOSC liblo
+    ++ lib.optionals withQt [ qt5.qtbase qt5.qtsvg ]
+    ++ lib.optional withGtk2 gtk2 ++ lib.optional withGtk3 gtk3
+    ++ lib.optionals withX11 [
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXext
+      xorg.libXrandr
+      xorg.libXinerama
+    ] ++ lib.optional withFluidSynth fluidsynth
+    ++ lib.optional withFFmpeg ffmpeg ++ lib.optional withSDL2 SDL2
+    ++ lib.optional (withProjectM && libprojectM != null) libprojectM;
 
   propagatedBuildInputs = finalAttrs.pythonPath;
 
   enableParallelBuilding = true;
 
-  makeFlags = [
-    "PREFIX=$(out)"
-    "LIBDIR=$(out)/lib"
-  ];
+  makeFlags = [ "PREFIX=$(out)" "LIBDIR=$(out)/lib" ];
 
   installFlags = [ "PREFIX=$(out)" ];
 
@@ -129,33 +88,47 @@ stdenv.mkDerivation (finalAttrs: {
       filename="$(basename -- "$file")"
       substituteInPlace "$file" --replace '--with-appname="$0"' "--with-appname=\"$filename\""
     done
-  ''
-  + lib.optionalString withGtk2 ''
+  '' + lib.optionalString withGtk2 ''
     # Will try to dlopen() libgtk-x11-2.0 at runtime when using the bridge
     substituteInPlace source/bridges-ui/Makefile \
       --replace '$(CXX) $(OBJS_GTK2)' '$(CXX) $(OBJS_GTK2) -lgtk-x11-2.0'
   '';
 
-  # Don't wrap Qt apps in postInstall - we do it in postFixup
+  postInstall = ''
+    # Fix broken symlinks in resources - the latest Carla changed file locations
+    for f in $out/share/carla/resources/ui_*.py; do
+      if [ -L "$f" ] && [ ! -e "$f" ]; then
+        target=$(readlink "$f")
+        basename=$(basename "$target")
+        # Check if file exists in frontend directory
+        if [ -f "$out/share/carla/frontend/$basename" ]; then
+          rm "$f"
+          ln -s "../frontend/$basename" "$f"
+        elif [ -f "$out/lib/carla/$basename" ]; then
+          rm "$f"
+          ln -s "../../lib/carla/$basename" "$f"
+        else
+          # Just remove the broken symlink
+          rm "$f"
+        fi
+      fi
+    done
+  '';
+
   dontWrapQtApps = true;
 
   postFixup = let
     # Use PipeWire's JACK library FIRST in the path, then fall back to others
-    libPath = lib.makeLibraryPath (
-      [ pipewire.jack ]  # PipeWire JACK first!
+    libPath = lib.makeLibraryPath ([ pipewire.jack ] # PipeWire JACK first!
       ++ [ libsndfile alsa-lib libpulseaudio ]
       ++ lib.optionals withX11 [ xorg.libX11 xorg.libXcursor xorg.libXext ]
       ++ lib.optional withFluidSynth fluidsynth
-      ++ lib.optional withFFmpeg ffmpeg
-      ++ lib.optional withSDL2 SDL2
-      ++ lib.optional withOSC liblo
-      ++ lib.optional withGtk2 gtk2
-      ++ lib.optional withGtk3 gtk3
-    );
-    pythonPathStr = with python3Packages; lib.makeSearchPath python3.sitePackages ([
-      rdflib
-      pyliblo3
-    ] ++ lib.optionals withFrontend [ pyqt5 pyqt5-sip ]);
+      ++ lib.optional withFFmpeg ffmpeg ++ lib.optional withSDL2 SDL2
+      ++ lib.optional withOSC liblo ++ lib.optional withGtk2 gtk2
+      ++ lib.optional withGtk3 gtk3);
+    pythonPathStr = with python3Packages;
+      lib.makeSearchPath python3.sitePackages
+      ([ rdflib pyliblo3 ] ++ lib.optionals withFrontend [ pyqt5 pyqt5-sip ]);
   in ''
     # Wrap Python programs in bin/
     wrapPythonPrograms
@@ -189,13 +162,15 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru = {
     features = {
-      inherit withFrontend withQt withGtk2 withGtk3 withX11 withFFmpeg withFluidSynth withProjectM withSDL2 withOSC;
+      inherit withFrontend withQt withGtk2 withGtk3 withX11 withFFmpeg
+        withFluidSynth withProjectM withSDL2 withOSC;
     };
   };
 
   meta = {
     homepage = "https://kx.studio/carla";
-    description = "A fully-featured audio plugin host with support for many audio drivers and plugin formats";
+    description =
+      "A fully-featured audio plugin host with support for many audio drivers and plugin formats";
     longDescription = ''
       Carla is a fully-featured modular audio plugin host, with support for
       many audio drivers and plugin formats. It has some nice features like
@@ -205,7 +180,8 @@ stdenv.mkDerivation (finalAttrs: {
       Carla currently supports LADSPA, DSSI, LV2, VST2, VST3 and AU plugin formats,
       plus SF2, SF3 and SFZ file support.
     '';
-    changelog = "https://github.com/falkTX/Carla/releases/tag/v${finalAttrs.version}";
+    changelog =
+      "https://github.com/falkTX/Carla/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.gpl2Plus;
     maintainers = with lib.maintainers; [ ];
     platforms = lib.platforms.linux;
