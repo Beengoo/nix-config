@@ -49,6 +49,15 @@ in {
     </Menu>
   '';
   programs = {
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+            stdenv.cc.cc.lib
+            zlib
+            glib
+            libz
+          ];
+    };
     zsh.enable = true;
     hyprland = {
       enable = true;

@@ -8,8 +8,16 @@
     prismlauncher
     qpwgraph
     networkmanagerapplet
+    jdt-language-server
     carla
+    jetbrains.idea-community-bin
+    jdk21
+    python3
+    maven
+    gradle
+    ant
     osu-lazer
+    claude-code
     kdePackages.gwenview
     vlc
     kdePackages.dolphin
@@ -18,6 +26,7 @@
     cliphist
     wl-clipboard
     zip
+    vesktop
     unzip
     brightnessctl
     youtube-music
@@ -33,12 +42,8 @@
     hyprlock
     hypridle
   ];
-
   programs = {
-   zsh = {
-      enable = true;
-    };
-
+    zsh = { enable = true; };
     noctalia-shell = {
       enable = true;
       systemd.enable = true;
