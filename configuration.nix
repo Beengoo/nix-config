@@ -32,7 +32,11 @@ in {
     neovide
     tmux
     home-manager
+    kdePackages.kio-fuse
     kdePackages.konsole
+    kdePackages.kwallet
+    kdePackages.kio
+    kdePackages.kio-extras
   ];
   environment.etc."xdg/menus/applications.menu".text = ''
     <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"

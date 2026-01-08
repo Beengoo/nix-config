@@ -42,6 +42,17 @@
     hyprlock
     hypridle
   ];
+  services.flameshot = {
+    # Also installs/enables flameshot
+    enable = true;
+    settings = {
+      General = {
+        useGrimAdapter = true;
+        # Stops warnings for using Grim
+        disabledGrimWarning = true;
+      };
+    };
+  };
   programs = {
     zsh = { enable = true; };
     noctalia-shell = {

@@ -1,6 +1,7 @@
 {pkgs, ...}: {
 	services.gnome.gcr-ssh-agent.enable = false;
 	services.usbmuxd.enable = true;
+	services.dbus.enable = true;
 	services.logrotate.checkConfig = false;
 	systemd.services.logrotate-checkconf.enable = false;
 	services.speechd.enable = false;
