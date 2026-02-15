@@ -32,9 +32,6 @@
       qt6ct-kde-pkg = final: prev: {
         qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde {};
       };
-      hopondesk-pkg = final: prev: {
-        hopondesk = final.callPackage ./home/localpkgs/hopondesk {};
-      };
       osu-lazer-pkg = final: prev: {
         osu-lazer = final.callPackage ./home/localpkgs/osu-lazer {};
       };
@@ -46,7 +43,6 @@
           carla-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
-          hopondesk-pkg
         ];
       };
     in {

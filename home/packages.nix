@@ -26,7 +26,6 @@
     gradle
     ant
     osu-lazer
-    hopondesk
     claude-code
     kdePackages.gwenview
     vlc
