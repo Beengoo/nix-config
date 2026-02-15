@@ -14,7 +14,7 @@
 			package			= config.boot.kernelPackages.nvidiaPackages.stable;
 		};
 	};
-
+	
 	hardware.nvidia.prime = {
 		offload.enable = true;
 		intelBusId = "PCI:0:2:0";  

@@ -32,6 +32,10 @@ in {
     neovide
     tmux
     home-manager
+    sshfs
+    docker
+    docker-compose
+    fuse3
     kdePackages.kio-fuse
     kdePackages.konsole
     kdePackages.kwallet
@@ -55,12 +59,7 @@ in {
   programs = {
     nix-ld = {
       enable = true;
-      libraries = with pkgs; [
-            stdenv.cc.cc.lib
-            zlib
-            glib
-            libz
-          ];
+      libraries = with pkgs; [ stdenv.cc.cc.lib zlib glib libz libx11 ];
     };
     zsh.enable = true;
     hyprland = {
@@ -74,7 +73,13 @@ in {
   };
 
   security.rtkit.enable = true;
-
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
   nix.extraOptions = ''
     use-xdg-base-directories = true
   '';

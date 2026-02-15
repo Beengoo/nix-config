@@ -14,12 +14,13 @@
       url = "github:h-banii/youtube-music-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hytale-launcher.url = "github:TNAZEP/HytaleLauncherFlake";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, ... }@inputs:
+  outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, hytale-launcher, ... }@inputs:
     let
       system = "x86_64-linux";
       carla-pkg = final: prev: {
@@ -30,6 +31,9 @@
       };
       qt6ct-kde-pkg = final: prev: {
         qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde {};
+      };
+      hopondesk-pkg = final: prev: {
+        hopondesk = final.callPackage ./home/localpkgs/hopondesk {};
       };
       osu-lazer-pkg = final: prev: {
         osu-lazer = final.callPackage ./home/localpkgs/osu-lazer {};
@@ -42,6 +46,7 @@
           carla-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
+          hopondesk-pkg
         ];
       };
     in {
@@ -58,6 +63,7 @@
             inherit noctalia;
             inherit zen-browser;
             inherit youtube-music;
+            inherit hytale-launcher;
           };
           modules = [ ./home.nix ];
         };

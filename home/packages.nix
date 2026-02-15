@@ -1,4 +1,4 @@
-{ pkgs, zen-browser, ... }: {
+{ pkgs, zen-browser, hytale-launcher, ... }: {
 
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -6,17 +6,27 @@
     btop
     lsp-plugins
     prismlauncher
+    telegram-desktop
     qpwgraph
+    ostree
+    librecad
+    gnome-network-displays
     networkmanagerapplet
     jdt-language-server
+    android-tools
+    scrcpy
+    gthumb
+    libreoffice-qt-fresh
     carla
     jetbrains.idea-community-bin
+    hytale-launcher.packages.${pkgs.system}.default
     jdk21
     python3
     maven
     gradle
     ant
     osu-lazer
+    hopondesk
     claude-code
     kdePackages.gwenview
     vlc
@@ -34,6 +44,7 @@
     matugen
     cava
     wlsunset
+    dbeaver-bin
     evolution-data-server
     fzf
     nixd
@@ -41,7 +52,21 @@
     ripgrep
     hyprlock
     hypridle
+    kdePackages.kdeconnect-kde
   ];
+  # Why everybody forget about prime offload?
+  # Oh wait.. I know..
+  xdg.desktopEntries.hytale-launcher = {
+    name = "Hytale";
+    genericName = "Hytale Launcher";
+    comment = "Launch Hytale";
+    exec = "env __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia hytale-launcher %U";
+    icon = "hytale-launcher";
+    terminal = false;
+    categories = [ "Game" ];
+    startupNotify = true;
+  };
+
   services.flameshot = {
     # Also installs/enables flameshot
     enable = true;
