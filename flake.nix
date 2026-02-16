@@ -35,6 +35,9 @@
       osu-lazer-pkg = final: prev: {
         osu-lazer = final.callPackage ./home/localpkgs/osu-lazer {};
       };
+      vintagestory-pkg = final: prev: {
+        vintagestory = final.callPackage ./home/localpkgs/vintagestory {};
+      };
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -43,6 +46,7 @@
           carla-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
+          vintagestory-pkg
         ];
       };
     in {

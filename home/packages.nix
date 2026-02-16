@@ -7,6 +7,10 @@
     lsp-plugins
     prismlauncher
     telegram-desktop
+    vintagestory
+    wf-recorder
+    wayvnc
+    ffmpeg
     qpwgraph
     ostree
     librecad
