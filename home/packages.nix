@@ -3,6 +3,10 @@
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     discord-canary
+    stoat-desktop
+    remmina
+    carla-patched
+    krita
     btop
     lsp-plugins
     prismlauncher
@@ -21,8 +25,7 @@
     scrcpy
     gthumb
     libreoffice-qt-fresh
-    carla
-    jetbrains.idea-community-bin
+    jetbrains.idea-oss
     hytale-launcher.packages.${pkgs.system}.default
     jdk21
     python3
@@ -42,7 +45,7 @@
     vesktop
     unzip
     brightnessctl
-    youtube-music
+    pear-desktop
     ddcutil
     matugen
     cava

@@ -23,8 +23,8 @@
   outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, hytale-launcher, ... }@inputs:
     let
       system = "x86_64-linux";
-      carla-pkg = final: prev: {
-        carla = final.callPackage ./home/localpkgs/carla {};
+      carla-patched-pkg = final: prev: {
+        carla-patched = final.callPackage ./home/localpkgs/carla-patched {};
       };
       lazer-pkg = final: prev: {
         Lazer = final.callPackage ./home/localpkgs/Lazer {};
@@ -35,18 +35,15 @@
       osu-lazer-pkg = final: prev: {
         osu-lazer = final.callPackage ./home/localpkgs/osu-lazer {};
       };
-      vintagestory-pkg = final: prev: {
-        vintagestory = final.callPackage ./home/localpkgs/vintagestory {};
-      };
+
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         overlays = [ 
           lazer-pkg
-          carla-pkg
+          carla-patched-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
-          vintagestory-pkg
         ];
       };
     in {

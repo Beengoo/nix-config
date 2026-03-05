@@ -59,7 +59,24 @@ in {
   programs = {
     nix-ld = {
       enable = true;
-      libraries = with pkgs; [ stdenv.cc.cc.lib zlib glib libz libx11 ];
+      libraries = with pkgs; [
+        stdenv.cc.cc.lib
+        zlib
+        libudev-zero
+        glib
+        libz
+        libx11
+        libGL
+        libGLU
+        mesa
+        mesa.drivers
+        xorg.libXext
+        xorg.libXrandr
+        xorg.libXcursor
+        xorg.libXinerama
+        xorg.libXi
+        xorg.libXxf86vm
+      ];
     };
     zsh.enable = true;
     hyprland = {
