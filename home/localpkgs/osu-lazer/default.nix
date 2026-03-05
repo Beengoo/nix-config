@@ -13,12 +13,12 @@ let
   
   # If pinnedVersion is set, use it; otherwise you need to update manually
   # To find latest: curl -sI https://github.com/ppy/osu/releases/latest | grep location
-  version = "2026.119.0";
+  version = "2026.305.0";
   tag = "${version}-lazer";
 
   src = fetchurl {
     url = "https://github.com/ppy/osu/releases/download/${tag}/osu.AppImage";
-    hash = "sha256-lx8lU9tNXD90rpaKlIyR0C4eSivfmVAJP7Wq+n3Ht08=";
+    hash = "sha256-azI3PS5LIVq1H02P1Z4Bny2VFqVLUC6pwCj1UD5HA6g=";
   };
 
   # Extract the AppImage to get assets (icons, desktop file)
