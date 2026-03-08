@@ -1,25 +1,26 @@
 diff --git a/source/frontend/carla_host.py b/source/frontend/carla_host.py
-index 5b279a676..3f3da6a19 100644
+index dc73ea4f5..a6954029f 100644
 --- a/source/frontend/carla_host.py
 +++ b/source/frontend/carla_host.py
-@@ -31,6 +31,7 @@ from ctypes import (
- # ------------------------------------------------------------------------------------------------------------
- # Imports (PyQt5)
+@@ -54,6 +54,8 @@ if qt_config == 5:
+         QListWidgetItem,
+         QGraphicsView,
+         QMainWindow,
++        QSystemTrayIcon,
++        QMenu,
+     )
  
-+
- # This fails in some configurations, assume >= 5.6.0 in that case
- try:
-     from PyQt5.Qt import PYQT_VERSION
-@@ -44,7 +45,7 @@ from PyQt5.QtGui import (
-     QImage, QImageWriter, QPainter, QPalette, QBrush
- )
- from PyQt5.QtWidgets import (
--    QAction, QApplication, QInputDialog, QFileSystemModel, QListWidgetItem, QGraphicsView, QMainWindow
-+    QAction, QApplication, QInputDialog, QFileSystemModel, QListWidgetItem, QGraphicsView, QMainWindow, QSystemTrayIcon, QMenu
- )
+ elif qt_config == 6:
+@@ -86,6 +88,8 @@ elif qt_config == 6:
+         QListWidgetItem,
+         QGraphicsView,
+         QMainWindow,
++        QSystemTrayIcon,
++        QMenu,
+     )
  
  # ------------------------------------------------------------------------------------------------------------
-@@ -136,6 +137,12 @@ class HostWindow(QMainWindow):
+@@ -182,6 +186,12 @@ class HostWindow(QMainWindow):
          self.ui = ui_carla_host.Ui_CarlaHostW()
          self.ui.setupUi(self)
          gCarla.gui = self
@@ -32,7 +33,7 @@ index 5b279a676..3f3da6a19 100644
  
          if False:
              # kdevelop likes this :)
-@@ -670,7 +677,22 @@ class HostWindow(QMainWindow):
+@@ -710,7 +720,22 @@ class HostWindow(QMainWindow):
              self.ui.act_file_quit.setText(self.tr("Hide"))
              QApplication.instance().setQuitOnLastWindowClosed(False)
          else:
@@ -56,7 +57,7 @@ index 5b279a676..3f3da6a19 100644
  
      # --------------------------------------------------------------------------------------------------------
      # Setup
-@@ -1109,6 +1131,7 @@ class HostWindow(QMainWindow):
+@@ -1152,6 +1177,7 @@ class HostWindow(QMainWindow):
          self.ui.text_logs.appendPlainText("  Driver name:  %s" % driverName)
          self.ui.text_logs.appendPlainText("  Sample rate:  %i" % int(sampleRate))
          self.ui.text_logs.appendPlainText("  Process mode: %s" % processMode2Str(processMode))
@@ -64,7 +65,7 @@ index 5b279a676..3f3da6a19 100644
  
      @pyqtSlot()
      def slot_handleEngineStoppedCallback(self):
-@@ -1135,6 +1158,7 @@ class HostWindow(QMainWindow):
+@@ -1178,6 +1204,7 @@ class HostWindow(QMainWindow):
          if self.host.isPlugin or not self.fSessionManagerName:
              self.ui.act_file_open.setEnabled(False)
              self.ui.act_file_save_as.setEnabled(False)
@@ -72,7 +73,7 @@ index 5b279a676..3f3da6a19 100644
  
      @pyqtSlot(int, str)
      def slot_handleTransportModeChangedCallback(self, transportMode, transportExtra):
-@@ -1475,6 +1499,7 @@ class HostWindow(QMainWindow):
+@@ -1535,6 +1562,7 @@ class HostWindow(QMainWindow):
  
          if pluginType == PLUGIN_LV2:
              self.fHasLoadedLv2Plugins = True
@@ -80,7 +81,7 @@ index 5b279a676..3f3da6a19 100644
  
      @pyqtSlot(int)
      def slot_handlePluginRemovedCallback(self, pluginId):
-@@ -1510,6 +1535,7 @@ class HostWindow(QMainWindow):
+@@ -1570,6 +1598,7 @@ class HostWindow(QMainWindow):
              pitem.setPluginId(i)
  
          self.ui.act_plugin_remove_all.setEnabled(True)
@@ -88,7 +89,7 @@ index 5b279a676..3f3da6a19 100644
  
      # --------------------------------------------------------------------------------------------------------
      # Canvas
-@@ -1589,6 +1615,75 @@ class HostWindow(QMainWindow):
+@@ -1649,6 +1678,75 @@ class HostWindow(QMainWindow):
              self.ui.graphicsView.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
          else:
              self.ui.graphicsView.setViewportUpdateMode(QGraphicsView.MinimalViewportUpdate)
@@ -164,7 +165,7 @@ index 5b279a676..3f3da6a19 100644
  
      def updateCanvasInitialPos(self):
          x = self.ui.graphicsView.horizontalScrollBar().value() + self.width()/4
-@@ -1626,6 +1721,50 @@ class HostWindow(QMainWindow):
+@@ -1686,6 +1784,50 @@ class HostWindow(QMainWindow):
      @pyqtSlot()
      def slot_canvasArrange(self):
          patchcanvas.arrange()
@@ -215,7 +216,7 @@ index 5b279a676..3f3da6a19 100644
  
      @pyqtSlot()
      def slot_canvasRefresh(self):
-@@ -1943,6 +2082,9 @@ class HostWindow(QMainWindow):
+@@ -2007,6 +2149,9 @@ class HostWindow(QMainWindow):
              if not geometry.isNull():
                  self.restoreGeometry(geometry)
  
@@ -225,7 +226,7 @@ index 5b279a676..3f3da6a19 100644
              showToolbar = settings.value("ShowToolbar", True, bool)
              self.ui.act_settings_show_toolbar.setChecked(showToolbar)
              self.ui.toolBar.blockSignals(True)
-@@ -2952,6 +3094,10 @@ class HostWindow(QMainWindow):
+@@ -3067,11 +3212,32 @@ class HostWindow(QMainWindow):
                  return
  
          QMainWindow.closeEvent(self, event)
@@ -236,11 +237,33 @@ index 5b279a676..3f3da6a19 100644
  
          # if we reach this point, fully close ourselves
          gCarla.gui = None
+         QApplication.instance().quit()
+ 
++
++def updateSystemTrayTooltip(self):
++    """Update system tray tooltip with current status"""
++    if self.fSystemTray is None:
++        return
++    status_parts = ["Carla"]
++    
++    if self.host.is_engine_running():
++        status_parts.append("● Engine Running")
++    else:
++        status_parts.append("○ Engine Stopped")
++    
++    if self.fPluginCount > 0:
++        status_parts.append(f"{self.fPluginCount} plugin(s)")
++    
++    self.fSystemTray.setToolTip("\n".join(status_parts))
++
+ # ------------------------------------------------------------------------------------------------
+ # Canvas callback
+ 
 diff --git a/source/frontend/carla_shared.py b/source/frontend/carla_shared.py
-index dcdc11ea0..2c9b50f8c 100644
+index aae07a0d0..278c21bb6 100644
 --- a/source/frontend/carla_shared.py
 +++ b/source/frontend/carla_shared.py
-@@ -183,6 +183,7 @@ CANVAS_EYECANDY_SMALL     = 1
+@@ -181,6 +181,7 @@ CANVAS_EYECANDY_SMALL     = 1
  # ------------------------------------------------------------------------------------------------------------
  # Carla Settings keys
  
@@ -248,7 +271,7 @@ index dcdc11ea0..2c9b50f8c 100644
  CARLA_KEY_MAIN_PROJECT_FOLDER   = "Main/ProjectFolder"   # str
  CARLA_KEY_MAIN_USE_PRO_THEME    = "Main/UseProTheme"     # bool
  CARLA_KEY_MAIN_PRO_THEME_COLOR  = "Main/ProThemeColor"   # str
-@@ -261,6 +262,7 @@ CARLA_KEY_CUSTOM_PAINTING = "UseCustomPainting" # bool
+@@ -264,6 +265,7 @@ CARLA_KEY_CUSTOM_PAINTING = "UseCustomPainting" # bool
  # Carla Settings defaults
  
  # Main

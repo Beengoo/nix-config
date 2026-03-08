@@ -2,10 +2,12 @@
 
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-    discord-canary
     stoat-desktop
     remmina
     carla-patched
+    pavucontrol
+    calf
+    surge-XT
     krita
     btop
     lsp-plugins
@@ -42,7 +44,6 @@
     cliphist
     wl-clipboard
     zip
-    vesktop
     unzip
     brightnessctl
     pear-desktop
@@ -85,6 +86,11 @@
     };
   };
   programs = {
+    nixcord = {
+      enable = true;
+      discord.equicord.enable = true;
+      discord.vencord.enable = false;
+    };
     zsh = { enable = true; };
     noctalia-shell = {
       enable = true;

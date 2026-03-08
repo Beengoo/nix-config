@@ -15,19 +15,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hytale-launcher.url = "github:TNAZEP/HytaleLauncherFlake";
+    nixcord.url = "github:FlameFlag/nixcord";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, hytale-launcher, ... }@inputs:
+  outputs = { nixpkgs, home-manager, zen-browser, youtube-music, noctalia, hytale-launcher, nixcord, ... }@inputs:
     let
       system = "x86_64-linux";
-      carla-patched-pkg = final: prev: {
-        carla-patched = final.callPackage ./home/localpkgs/carla-patched {};
-      };
       lazer-pkg = final: prev: {
         Lazer = final.callPackage ./home/localpkgs/Lazer {};
+      };
+      carla-patched-pkg = final: prev: {
+        carla-patched = final.callPackage ./home/localpkgs/carla-patched {};
       };
       qt6ct-kde-pkg = final: prev: {
         qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde {};
@@ -47,9 +48,12 @@
         ];
       };
     in {
+      packages.${system} = {
+      carla-patched = pkgs.carla-patched; # Temporary for force rebuild
+      };
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
-          modules = [ ./configuration.nix ];  # Remove dolphin-overlay from here
+          modules = [ ./configuration.nix ];
           specialArgs = { inherit system inputs; };
         };
       };
@@ -61,6 +65,7 @@
             inherit zen-browser;
             inherit youtube-music;
             inherit hytale-launcher;
+            inherit nixcord;
           };
           modules = [ ./home.nix ];
         };
