@@ -3,6 +3,8 @@
 		initialPassword = "1234";
 		isNormalUser = true;
 		extraGroups = [
+			"virt-manager"
+			"virt-viewer"
 			"dialout"
 			"plugdev"
 			"wheel"

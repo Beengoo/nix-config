@@ -5,6 +5,7 @@
     stoat-desktop
     remmina
     carla-patched
+    whois
     pavucontrol
     calf
     surge-XT

@@ -23,6 +23,9 @@ in {
     ./system/network.nix
   ];
   environment.systemPackages = with pkgs; [
+    virt-manager
+    virt-viewer
+    virtiofsd
     nh
     prime-run
     git
@@ -66,6 +69,7 @@ in {
         glib
         libz
         libx11
+        libxrandr
         libGL
         libGLU
         mesa
@@ -90,6 +94,13 @@ in {
   };
 
   security.rtkit.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      swtpm.enable = true;
+    };
+  };
   virtualisation.docker = {
     enable = true;
     rootless = {

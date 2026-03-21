@@ -52,9 +52,7 @@ in stdenv.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
-
     make install PREFIX=$out
-
     for bin in carla carla-control carla-database \
                carla-jack-multi carla-jack-single \
                carla-patchbay carla-rack carla-settings; do
@@ -65,7 +63,10 @@ in stdenv.mkDerivation rec {
           --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ gtk2 gtk3 libX11 ]}"
       fi
     done
-
+    for bridge in $out/lib/carla/carla-bridge-*; do
+      wrapProgram "$bridge" \
+        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ gtk2 gtk3 libX11 ]}"
+    done
     runHook postInstall
   '';
 
