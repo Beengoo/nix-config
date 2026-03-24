@@ -45,7 +45,6 @@
           carla-patched-pkg
           qt6ct-kde-pkg
           osu-lazer-pkg
-          (import ./home/overrides.nix)
         ];
       };
     in {
