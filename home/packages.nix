@@ -4,7 +4,9 @@
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     stoat-desktop
     remmina
+    equibop
     carla-patched
+    rnnoise-plugin
     whois
     pavucontrol
     calf
@@ -87,11 +89,6 @@
     };
   };
   programs = {
-    nixcord = {
-      enable = true;
-      discord.equicord.enable = true;
-      discord.vencord.enable = false;
-    };
     zsh = { enable = true; };
     noctalia-shell = {
       enable = true;

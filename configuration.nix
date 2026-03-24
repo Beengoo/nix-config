@@ -31,6 +31,7 @@ in {
     git
     openvpn
     pipewire.jack
+    pulseaudio
     neovim
     neovide
     tmux
