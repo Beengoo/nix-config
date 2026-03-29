@@ -40,6 +40,9 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        config.permittedInsecurePackages = [
+          "electron-38.8.4"
+        ];
         overlays = [ 
           lazer-pkg
           carla-patched-pkg
