@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   services.gnome.gcr-ssh-agent.enable = false;
   services.usbmuxd.enable = true;
   services.dbus.enable = true;
@@ -8,6 +8,18 @@
   services.upower = {
     enable = true;
     criticalPowerAction = "Hibernate";
+  };
+
+  services.greetd = {
+    enable = true;
+    restart = true;
+    settings = {
+      default_session = {
+        user = "greeter";
+        command =
+          "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks --remember";
+      };
+    };
   };
 
   systemd = {
